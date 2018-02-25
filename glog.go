@@ -12,13 +12,10 @@ const (
 	prefix_fatal   = "F "
 )
 
-var isSetup bool = false
-
 var logfile string = "glog.log"
 
-func Setup(lf string) {
+func SetLogFile(lf string) {
 	logfile = lf
-	isSetup = true
 }
 
 func getLog (prefix string) (*os.File) {
