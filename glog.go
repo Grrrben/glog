@@ -85,3 +85,6 @@ func Warningf(line string, vars ...interface{}) {
 	defer f.Close()
 	log.Printf(line, vars...)
 }
+
+// Flush is not yet implemented, needed for the API's interface sake
+func Flush() {}
