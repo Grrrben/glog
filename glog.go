@@ -30,60 +30,60 @@ func getLog (prefix string) (*os.File) {
 }
 
 // Info prints a line to the log beginning with the I char to clarify that it's an Info message
-func Info(line string) {
+func Info(msg string) {
 	f := getLog(prefix_info)
 	defer f.Close()
-	log.Println(line)
+	log.Println(msg)
 }
 
 // Infof is identical to Info() but let's the user format the message string with any number of var's.
-func Infof(line string, vars ...interface{}) {
+func Infof(msg string, vars ...interface{}) {
 	f := getLog(prefix_info)
 	defer f.Close()
-	log.Printf(line, vars...)
+	log.Printf(msg, vars...)
 }
 
 // Error prints a line to the log beginning with the E char to clarify that it's an Error message
-func Error(line string) {
+func Error(msg string) {
 	f := getLog(prefix_error)
 	defer f.Close()
-	log.Println(line)
+	log.Println(msg)
 }
 
 // Errorf is identical to Error() but let's the user format the message string with any number of var's.
-func Errorf(line string, vars ...interface{}) {
+func Errorf(msg string, vars ...interface{}) {
 	f := getLog(prefix_error)
 	defer f.Close()
-	log.Printf(line, vars...)
+	log.Printf(msg, vars...)
 }
 
 // Fatal prints a line to the log beginning with the F char to clarify that it's an Fatal message
 // Fatal will terminate the program after logging.
-func Fatal(line string) {
+func Fatal(msg string) {
 	f := getLog(prefix_fatal)
 	defer f.Close()
-	log.Println(line)
+	log.Println(msg)
 }
 
 // Fatalf is identical to Fatal() but let's the user format the message string with any number of var's.
-func Fatalf(line string, vars ...interface{}) {
+func Fatalf(msg string, vars ...interface{}) {
 	f := getLog(prefix_fatal)
 	defer f.Close()
-	log.Printf(line, vars...)
+	log.Printf(msg, vars...)
 }
 
 // Warning prints a line to the log beginning with the W char to clarify that it's an Warning message
-func Warning(line string) {
+func Warning(msg string) {
 	f := getLog(prefix_warning)
 	defer f.Close()
-	log.Println(line)
+	log.Println(msg)
 }
 
 // Warningf is identical to Warning() but let's the user format the message string with any number of var's.
-func Warningf(line string, vars ...interface{}) {
+func Warningf(msg string, vars ...interface{}) {
 	f := getLog(prefix_warning)
 	defer f.Close()
-	log.Printf(line, vars...)
+	log.Printf(msg, vars...)
 }
 
 // Flush is not yet implemented, needed for the API's interface sake
