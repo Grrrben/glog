@@ -12,6 +12,7 @@ const (
 	prefix_fatal   = "F "
 )
 
+// this is where your log would be placed.
 var logfile string = "glog.log"
 
 // SetLogFile sets a preferred path/and/file to the log.
