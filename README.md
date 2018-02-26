@@ -37,5 +37,4 @@ W 2018/02/25 13:42:50 warning: string 8
 
 - Set severity level
 - Write some test
-- Document the methods
 - Implement a log stack with a Flush() method
