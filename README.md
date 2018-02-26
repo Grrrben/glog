@@ -14,7 +14,7 @@ Just import it:
 ```
 import (
 	"github.com/grrrben/glog"
-)k
+)
 ```
 
 Don't forget that `go get` command...  
@@ -37,6 +37,5 @@ W 2018/02/25 13:42:50 warning: string 8
 
 ## Todo
 
-- Set severity level
-- Write some test
 - Implement a log stack with a Flush() method
+- Write some test

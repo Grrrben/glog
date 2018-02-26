@@ -13,28 +13,28 @@ const (
 	prefix_fatal   = "F "
 )
 
-// Exported constants for the severity level.
-// Use these when calling SetSeverityLevel(int)
+// Exported constants for the severity level of the logged messages.
+// Use these when calling SetLogLevel(int)
 const (
-	Severity_level_error = 0
-	Severity_level_warning = 1
-	Severity_level_info    = 2
+	Log_level_error   = 0
+	Log_level_warning = 1
+	Log_level_info    = 2
 )
 
 // Should everything be logged, or should Info and Warning be dismissed?
-var severityLevel int = Severity_level_info
+var logLevel int = Log_level_info
 
 // this is where your log would be placed.
 var logfile string = "glog.log"
 
-// SetSeverityLevel tells glog to log or dismiss Warning and Info messages
+// SetLogLevel tells glog to log or dismiss Warning and Info messages
 // To be used with the Severity_level_* constants
-func SetSeverityLevel(level int) {
+func SetLogLevel(level int) {
 	if level < 0 || level > 2 {
 		// impossible value, should be consistent with the severity levels
-		severityLevel = Severity_level_info // include everything...
+		logLevel = Log_level_info // include everything...
 	}
-	severityLevel = level
+	logLevel = level
 }
 
 // SetLogFile sets a preferred path/and/file to the log.
@@ -56,7 +56,7 @@ func getLog(prefix string) *os.File {
 
 // Info prints a line to the log beginning with the I char to clarify that it's an Info message
 func Info(msg string) {
-	if severityLevel >= Severity_level_info {
+	if logLevel >= Log_level_info {
 		f := getLog(prefix_info)
 		defer f.Close()
 		log.Println(msg)
@@ -65,7 +65,7 @@ func Info(msg string) {
 
 // Infof is identical to Info() but let's the user format the message string with any number of var's.
 func Infof(msg string, vars ...interface{}) {
-	if severityLevel >= Severity_level_info {
+	if logLevel >= Log_level_info {
 		f := getLog(prefix_info)
 		defer f.Close()
 		log.Printf(msg, vars...)
@@ -103,7 +103,7 @@ func Fatalf(msg string, vars ...interface{}) {
 
 // Warning prints a line to the log beginning with the W char to clarify that it's an Warning message
 func Warning(msg string) {
-	if severityLevel >= Severity_level_warning {
+	if logLevel >= Log_level_warning {
 		f := getLog(prefix_warning)
 		defer f.Close()
 		log.Println(msg)
@@ -112,7 +112,7 @@ func Warning(msg string) {
 
 // Warningf is identical to Warning() but let's the user format the message string with any number of var's.
 func Warningf(msg string, vars ...interface{}) {
-	if severityLevel >= Severity_level_warning {
+	if logLevel >= Log_level_warning {
 		f := getLog(prefix_warning)
 		defer f.Close()
 		log.Printf(msg, vars...)
