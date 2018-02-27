@@ -28,7 +28,7 @@ var logLevel int = Log_level_info
 var logfile string = "glog.log"
 
 // SetLogLevel tells glog to log or dismiss Warning and Info messages
-// To be used with the Severity_level_* constants
+// To be used with the Log_level_* constants
 func SetLogLevel(level int) {
 	if level < 0 || level > 2 {
 		// impossible value, should be consistent with the severity levels

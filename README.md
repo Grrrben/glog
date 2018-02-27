@@ -22,6 +22,7 @@ And then use it like you would use any sane logging tool:
 
 ```
 glog.SetLogFile("log/glogfile.log")
+
 glog.Warning("warning")
 glog.Error("this is an Error")
 glog.Warningf("warning: %s %d", "string", 8)
@@ -34,6 +35,22 @@ W 2018/02/25 13:42:50 warning
 E 2018/02/25 13:42:50 this is an Error
 W 2018/02/25 13:42:50 warning: string 8
 ```
+
+Warning and Info messages can be muted by setting the log level with `glog.SetLogLevel(int)`.  
+The param given to the method should be one of the `Log_level_*` constants:
+
+
+```
+// Exported constants for the severity level of the logged messages.
+// Use these when calling SetLogLevel(int)
+const (
+	Log_level_error   = 0
+	Log_level_warning = 1
+	Log_level_info    = 2
+)
+```
+
+The default behaviour is Log_level)_info, where every line is logged.
 
 ## Todo
 
