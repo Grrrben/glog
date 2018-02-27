@@ -1,5 +1,7 @@
 # glog
-A simple log tool for usage in Golang applications.  
+A simple log tool for usage in Golang applications.
+
+[![Build Status](https://travis-ci.org/Grrrben/glog.svg?branch=master)](https://travis-ci.org/Grrrben/glog)
 
 Just a wrapper on the standard go log package. It includes information on the serverity of the message:
 
@@ -55,4 +57,3 @@ The default behaviour is Log_level)_info, where every line is logged.
 ## Todo
 
 - Implement a log stack with a Flush() method
-- Write some test
