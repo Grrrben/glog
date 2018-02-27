@@ -33,8 +33,9 @@ func SetLogLevel(level int) {
 	if level < 0 || level > 2 {
 		// impossible value, should be consistent with the severity levels
 		logLevel = Log_level_info // include everything...
+	} else {
+		logLevel = level
 	}
-	logLevel = level
 }
 
 // SetLogFile sets a preferred path/and/file to the log.
