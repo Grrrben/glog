@@ -38,9 +38,12 @@ E 2018/02/25 13:42:50 this is an Error
 W 2018/02/25 13:42:50 warning: string 8
 ```
 
+__Setting the log file__
+`SetLogFile()` is used to set a `path/plus/file.log` that the logger will use. If `glog.SetLogFile(path string)` is not set, the log wil appear as `glog.log` in your projects root directory.
+
+__Muting Info and Warning messages__
 Warning and Info messages can be muted by setting the log level with `glog.SetLogLevel(int)`.  
 The param given to the method should be one of the `Log_level_*` constants:
-
 
 ```
 // Exported constants for the severity level of the logged messages.
@@ -50,9 +53,23 @@ const (
 	Log_level_warning = 1
 	Log_level_info    = 2
 )
+
+// turn of info and warning:
+glog.SetLogLevel(glog.Log_level_error)
+
 ```
 
-The default behaviour is Log_level)_info, where every line is logged.
+The default behaviour is Log_level_info, where every line is logged.
+
+__Concurrency__
+
+`glog` is safe to use in concurrent programs. Just set the `go` keyword before calling a log message:
+
+```
+go glog.Warning("A concurrent warning")
+go glog.Error("this is an Error in a goroutine")
+go glog.Warningf("warning: %s %d", "goroutine", 8)
+```
 
 ## Todo
 
