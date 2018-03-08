@@ -39,7 +39,7 @@ W 2018/02/25 13:42:50 warning: string 8
 ```
 
 __Setting the log file__
-If `glog.SetLogFile(path string)` is not set, the log wil appear as `glog.log` in your projects root directory.
+`SetLogFile()` is used to set a `path/plus/file.log` that the logger will use. If `glog.SetLogFile(path string)` is not set, the log wil appear as `glog.log` in your projects root directory.
 
 __Muting Info and Warning messages__
 Warning and Info messages can be muted by setting the log level with `glog.SetLogLevel(int)`.  
