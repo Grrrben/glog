@@ -7,8 +7,8 @@ Just a wrapper on the standard go log package. It includes information on the se
 
 I(nfo)  
 W(arning)  
-E(rror)
-P(anic)
+E(rror)  
+P(anic)  
 F(atal)
 
 ## Usage
