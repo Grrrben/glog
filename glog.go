@@ -1,6 +1,7 @@
 package glog
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -12,14 +13,15 @@ const (
 	prefix_warning = "W "
 	prefix_error   = "E "
 	prefix_fatal   = "F "
+	prefix_panic   = "P "
 )
 
 // Exported constants for the severity level of the logged messages.
 // Use these when calling SetLogLevel(int)
 const (
-	Log_level_error   = 0
-	Log_level_warning = 1
-	Log_level_info    = 2
+	Log_level_error = iota
+	Log_level_warning
+	Log_level_info
 )
 
 // Should everything be logged, or should Info and Warning be dismissed?
@@ -29,12 +31,12 @@ var logLevel int = Log_level_info
 var logfile string = "glog.log"
 
 // safe to use glog concurrently
-var mux sync.Mutex
+var mux sync.RWMutex
 
 // SetLogLevel tells glog to log or dismiss Warning and Info messages
 // To be used with the Log_level_* constants
 func SetLogLevel(level int) {
-	if level < 0 || level > 2 {
+	if level < Log_level_error || level > Log_level_info {
 		// impossible value, should be consistent with the severity levels
 		logLevel = Log_level_info // include everything...
 	} else {
@@ -107,6 +109,7 @@ func Fatal(msg string) {
 	f := getLog(prefix_fatal)
 	defer f.Close()
 	log.Println(msg)
+	os.Exit(1)
 }
 
 // Fatalf is identical to Fatal() but let's the user format the message string with any number of var's.
@@ -116,6 +119,29 @@ func Fatalf(msg string, vars ...interface{}) {
 	f := getLog(prefix_fatal)
 	defer f.Close()
 	log.Printf(msg, vars...)
+	os.Exit(1)
+}
+
+// Panic prints a line to the log beginning with the P char to clarify that it's an Panic message
+// Panic will panic after logging.
+func Panic(msg string) {
+	mux.Lock()
+	defer mux.Unlock()
+	f := getLog(prefix_panic)
+	defer f.Close()
+	log.Println(msg)
+	panic(msg)
+}
+
+// Panicf is identical to Panic() but let's the user format the message string with any number of var's.
+func Panicf(msg string, vars ...interface{}) {
+	mux.Lock()
+	defer mux.Unlock()
+	f := getLog(prefix_panic)
+	defer f.Close()
+	m := fmt.Sprintf(msg, vars...)
+	log.Println(m)
+	panic(m)
 }
 
 // Warning prints a line to the log beginning with the W char to clarify that it's an Warning message
