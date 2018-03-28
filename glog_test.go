@@ -34,14 +34,14 @@ func reset() {
 }
 
 func TestSetLogFile(t *testing.T) {
-	if logfile != "glog.log" {
+	if logger.logfile != "glog.log" {
 		t.Error("Base logfile is incorrect")
 	}
 
 	SetLogFile("dir/test.log")
 
-	if logfile != "dir/test.log" {
-		t.Error("Could not change the location of the logfile")
+	if logger.logfile != "dir/test.log" {
+		t.Error("Could not change the location of the logger.logfile")
 	}
 
 	// reset
@@ -49,23 +49,23 @@ func TestSetLogFile(t *testing.T) {
 }
 
 func TestSetLogLevel(t *testing.T) {
-	if logLevel != Log_level_info {
-		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_info, logLevel)
+	if logger.logLevel != Log_level_info {
+		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_info, logger.logLevel)
 	}
 
 	SetLogLevel(Log_level_warning)
-	if logLevel != Log_level_warning {
-		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_warning, logLevel)
+	if logger.logLevel != Log_level_warning {
+		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_warning, logger.logLevel)
 	}
 
 	SetLogLevel(Log_level_error)
-	if logLevel != Log_level_error {
-		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_error, logLevel)
+	if logger.logLevel != Log_level_error {
+		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_error, logger.logLevel)
 	}
 
 	SetLogLevel(5)
-	if logLevel != Log_level_info {
-		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_info, logLevel)
+	if logger.logLevel != Log_level_info {
+		t.Errorf("Loglevel unexpected: want %d got %d", Log_level_info, logger.logLevel)
 	}
 }
 
@@ -83,7 +83,7 @@ func TestInfo(t *testing.T) {
 	Info("info message")
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -108,7 +108,7 @@ func TestInfof(t *testing.T) {
 	Infof("info message %s %d", "number", 2)
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -134,7 +134,7 @@ func TestWarning(t *testing.T) {
 	Warning("warning message")
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -159,7 +159,7 @@ func TestWarningf(t *testing.T) {
 	Warningf("warning message %s %d", "number", 2)
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -185,7 +185,7 @@ func TestError(t *testing.T) {
 	Error("error message")
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -210,7 +210,7 @@ func TestErrorf(t *testing.T) {
 	Errorf("error message %s %d", "number", 2)
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -240,7 +240,7 @@ func TestPanic(t *testing.T) {
 
 			file, err := os.Open(testlog)
 			if err != nil {
-				t.Error("Could not open logfile test.log")
+				t.Error("Could not open logger.logfile test.log")
 			}
 
 			scanner := bufio.NewScanner(file)
@@ -273,7 +273,7 @@ func TestPanicf(t *testing.T) {
 
 			file, err := os.Open(testlog)
 			if err != nil {
-				t.Error("Could not open logfile test.log")
+				t.Error("Could not open logger.logfile test.log")
 			}
 
 			scanner := bufio.NewScanner(file)
@@ -303,7 +303,7 @@ func TestMultipleLines(t *testing.T) {
 
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -325,7 +325,7 @@ func TestMultipleLinesWithInfoDisabled(t *testing.T) {
 
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 
@@ -347,7 +347,7 @@ func TestMultipleLinesWithWarningDisabled(t *testing.T) {
 
 	file, err := os.Open(testlog)
 	if err != nil {
-		t.Error("Could not open logfile test.log")
+		t.Error("Could not open logger.logfile test.log")
 	}
 	defer file.Close()
 

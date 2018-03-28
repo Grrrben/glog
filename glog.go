@@ -7,6 +7,14 @@ import (
 	"sync"
 )
 
+// Exported constants for the severity level of the logged messages.
+// Use these when calling Setlogger.logLevel(int)
+const (
+	Log_level_error = iota
+	Log_level_warning
+	Log_level_info
+)
+
 // Prefixes for the log lines to determine the severity of the message
 const (
 	prefix_info    = "I "
@@ -16,43 +24,37 @@ const (
 	prefix_panic   = "P "
 )
 
-// Exported constants for the severity level of the logged messages.
-// Use these when calling SetLogLevel(int)
-const (
-	Log_level_error = iota
-	Log_level_warning
-	Log_level_info
-)
+var logger struct {
+	logLevel     int    // Should everything be logged, or should Info and Warning be dismissed?
+	logfile      string // this is where your log would be placed.
+	sync.RWMutex        // for usage in goroutines
+}
 
-// Should everything be logged, or should Info and Warning be dismissed?
-var logLevel int = Log_level_info
-
-// this is where your log would be placed.
-var logfile string = "glog.log"
-
-// safe to use glog concurrently
-var mux sync.RWMutex
+func init() {
+	logger.logLevel = Log_level_info
+	logger.logfile = "glog.log"
+}
 
 // SetLogLevel tells glog to log or dismiss Warning and Info messages
 // To be used with the Log_level_* constants
 func SetLogLevel(level int) {
 	if level < Log_level_error || level > Log_level_info {
 		// impossible value, should be consistent with the severity levels
-		logLevel = Log_level_info // include everything...
+		logger.logLevel = Log_level_info // include everything...
 	} else {
-		logLevel = level
+		logger.logLevel = level
 	}
 }
 
-// SetLogFile sets a preferred path/and/file to the log.
+// SetLogfile sets a preferred path/and/file to the log.
 func SetLogFile(lf string) {
-	logfile = lf
+	logger.logfile = lf
 }
 
 // getLog gives the caller a pointer to the log File so message strings can be added to the file
 // Should be closed after use.
 func getLog(prefix string) *os.File {
-	f, err := os.OpenFile(logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile(logger.logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
@@ -63,9 +65,9 @@ func getLog(prefix string) *os.File {
 
 // Info prints a line to the log beginning with the I char to clarify that it's an Info message
 func Info(msg string) {
-	mux.Lock()
-	defer mux.Unlock()
-	if logLevel >= Log_level_info {
+	logger.Lock()
+	defer logger.Unlock()
+	if logger.logLevel >= Log_level_info {
 		f := getLog(prefix_info)
 		defer f.Close()
 		log.Println(msg)
@@ -74,9 +76,9 @@ func Info(msg string) {
 
 // Infof is identical to Info() but let's the user format the message string with any number of var's.
 func Infof(msg string, vars ...interface{}) {
-	mux.Lock()
-	defer mux.Unlock()
-	if logLevel >= Log_level_info {
+	logger.Lock()
+	defer logger.Unlock()
+	if logger.logLevel >= Log_level_info {
 		f := getLog(prefix_info)
 		defer f.Close()
 		log.Printf(msg, vars...)
@@ -85,8 +87,8 @@ func Infof(msg string, vars ...interface{}) {
 
 // Error prints a line to the log beginning with the E char to clarify that it's an Error message
 func Error(msg string) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_error)
 	defer f.Close()
 	log.Println(msg)
@@ -94,8 +96,8 @@ func Error(msg string) {
 
 // Errorf is identical to Error() but let's the user format the message string with any number of var's.
 func Errorf(msg string, vars ...interface{}) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_error)
 	defer f.Close()
 	log.Printf(msg, vars...)
@@ -104,8 +106,8 @@ func Errorf(msg string, vars ...interface{}) {
 // Fatal prints a line to the log beginning with the F char to clarify that it's an Fatal message
 // Fatal will terminate the program after logging.
 func Fatal(msg string) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_fatal)
 	defer f.Close()
 	log.Println(msg)
@@ -114,8 +116,8 @@ func Fatal(msg string) {
 
 // Fatalf is identical to Fatal() but let's the user format the message string with any number of var's.
 func Fatalf(msg string, vars ...interface{}) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_fatal)
 	defer f.Close()
 	log.Printf(msg, vars...)
@@ -125,8 +127,8 @@ func Fatalf(msg string, vars ...interface{}) {
 // Panic prints a line to the log beginning with the P char to clarify that it's an Panic message
 // Panic will panic after logging.
 func Panic(msg string) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_panic)
 	defer f.Close()
 	log.Println(msg)
@@ -135,8 +137,8 @@ func Panic(msg string) {
 
 // Panicf is identical to Panic() but let's the user format the message string with any number of var's.
 func Panicf(msg string, vars ...interface{}) {
-	mux.Lock()
-	defer mux.Unlock()
+	logger.Lock()
+	defer logger.Unlock()
 	f := getLog(prefix_panic)
 	defer f.Close()
 	m := fmt.Sprintf(msg, vars...)
@@ -146,9 +148,9 @@ func Panicf(msg string, vars ...interface{}) {
 
 // Warning prints a line to the log beginning with the W char to clarify that it's an Warning message
 func Warning(msg string) {
-	mux.Lock()
-	defer mux.Unlock()
-	if logLevel >= Log_level_warning {
+	logger.Lock()
+	defer logger.Unlock()
+	if logger.logLevel >= Log_level_warning {
 		f := getLog(prefix_warning)
 		defer f.Close()
 		log.Println(msg)
@@ -157,9 +159,9 @@ func Warning(msg string) {
 
 // Warningf is identical to Warning() but let's the user format the message string with any number of var's.
 func Warningf(msg string, vars ...interface{}) {
-	mux.Lock()
-	defer mux.Unlock()
-	if logLevel >= Log_level_warning {
+	logger.Lock()
+	defer logger.Unlock()
+	if logger.logLevel >= Log_level_warning {
 		f := getLog(prefix_warning)
 		defer f.Close()
 		log.Printf(msg, vars...)
