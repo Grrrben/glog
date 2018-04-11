@@ -2,6 +2,7 @@ package glog
 
 import (
 	"bufio"
+	"errors"
 	"log"
 	"os"
 	"regexp"
@@ -31,6 +32,7 @@ func reset() {
 	}
 	// reset to test.log
 	SetLogFile(testlog)
+	SetLogLevel(Log_level_info)
 }
 
 func TestSetLogFile(t *testing.T) {
@@ -314,6 +316,32 @@ func TestMultipleLines(t *testing.T) {
 	}
 
 	if i != 6 {
+		t.Errorf("Error, expected 6 loglines, got %d", i)
+	}
+}
+
+func TestMultiArgs(t *testing.T) {
+	reset()
+	e := errors.New("error body")
+	a := []string{"one", "two", "three"}
+
+	Info("info", e, a)
+	Warning("warning", e, a)
+	Error("error", e, a)
+
+	file, err := os.Open(testlog)
+	if err != nil {
+		t.Error("Could not open logger.logfile test.log")
+	}
+	defer file.Close()
+
+	i := 0
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		i++
+	}
+
+	if i != 9 {
 		t.Errorf("Error, expected 6 loglines, got %d", i)
 	}
 }
