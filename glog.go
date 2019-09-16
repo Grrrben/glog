@@ -63,6 +63,13 @@ func getLog(prefix string) *os.File {
 	return f
 }
 
+// SetOutput sets the output destination for the logger.
+func SetOutput(w io.Writer) {
+	logger.Lock()
+	defer logger.Unlock()
+	log.SetOutput(w)
+}
+
 // Info prints a line to the log beginning with the I char to clarify that it's an Info message
 func Info(msg ...interface{}) {
 	logger.Lock()
