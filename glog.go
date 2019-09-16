@@ -2,6 +2,7 @@ package glog
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"sync"
